@@ -19,6 +19,19 @@ function setup(md, options) {
     // pass token to default renderer.
     return defaultRender(tokens, idx, options, env, self);
   };
+
+  md.renderer.rules.code_inline = function(tokens, idx, options, env, self) {
+    var token = tokens[idx];
+
+    if(token.content.substr(0,4) === "math") {
+      console.log("match");
+      console.log(token.content.substr(4).trim());
+
+      return renderInline(token.content.substr(4).trim(), false);
+    }
+
+    return defaultRender(tokens, idx, options, env, self);
+  }
 }
 
 function render(str, disp) {
@@ -26,12 +39,19 @@ function render(str, disp) {
   var arr = str.trim().split("\n");
   var result = "";
 
-  // render each line
+  // render each line, skipping empty lines
   for(var i = 0; i < arr.length; i++) {
-    result += "<p>" + renderElement(preprocessMath(arr[i]), disp) + "<p>";
+    if(arr[i]) {
+      result += "<p>" + renderElement(preprocessMath(arr[i]), disp) + "<p>";
+    }
   }
 
   return result;
+}
+
+function renderInline(str, disp) {
+  console.log(preprocessMath(str));
+  return renderElement(preprocessMath(str), disp);
 }
 
 function renderElement(str, disp) {
@@ -49,9 +69,5 @@ function preprocessMath(str) {
 
   return newstr;
 }
-//
-//   // expose module to global object
-//   global.RenderMath = RenderMath;
-// })( this );
 
 module.exports = setup;
