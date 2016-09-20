@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-asciimath",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Markdown-it plugin to include ascii-math",
   "main": "index.js",
   "scripts": {
