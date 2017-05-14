@@ -56,4 +56,4 @@ Now only this option is available:
 
 Name              | Description                                                          | Default
 ------------------|----------------------------------------------------------------------|------------------------------------
-"useKeyword"      | Use a the keywords `math` and `latex` to specify inline math syntax  | false
+"useKeyword"      | Use the keywords `math` and `latex` to specify inline math syntax  | false
