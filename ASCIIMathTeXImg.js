@@ -29,11 +29,11 @@ var noMathRender = false;
 
 (function() {
 var config = {
-  translateOnLoad: false,		  //true to autotranslate
+  translateOnLoad: true,		  //true to autotranslate
   mathcolor: "",       	      // defaults to back, or specify any other color
   displaystyle: true,         // puts limits above and below large operators
   showasciiformulaonhover: true, // helps students learn ASCIIMath
-  decimalsign: ",",           // change to "," if you like, beware of `(1,2)`!
+  decimalsign: ".",           // change to "," if you like, beware of `(1,2)`!
   AMdelimiter1: "`", AMescape1: "\\\\`", // can use other characters
   AMusedelimiter2: false, 	  //whether to use second delimiter below
   AMdelimiter2: "$", AMescape2: "\\\\\\$", AMdelimiter2regexp: "\\$",
@@ -148,7 +148,7 @@ var AMsymbols = [
 {input:"sube", tag:"mo", output:"\u2286", tex:"subseteq", ttype:CONST},
 {input:"supe", tag:"mo", output:"\u2287", tex:"supseteq", ttype:CONST},
 {input:"-=",  tag:"mo", output:"\u2261", tex:"equiv", ttype:CONST},
-{input:"~=",  tag:"mo", output:"\u2245", tex:"stackrel{\\sim}{=}", ttype:CONST}, //back hack b/c mimetex doesn't support /cong
+{input:"~=",  tag:"mo", output:"\u2245", tex:"stackrel{\\sim}{=}", notexcopy: true, ttype:CONST}, //back hack b/c mimetex doesn't support /cong
 {input:"cong",   tag:"mo", output:"~=", tex:null, ttype:DEFINITION},
 {input:"~~",  tag:"mo", output:"\u2248", tex:"approx", ttype:CONST},
 {input:"prop", tag:"mo", output:"\u221D", tex:"propto", ttype:CONST},
@@ -174,9 +174,16 @@ var AMsymbols = [
 {input:")", tag:"mo", output:")", tex:null, ttype:RIGHTBRACKET, val:true},
 {input:"[", tag:"mo", output:"[", tex:null, ttype:LEFTBRACKET, val:true},
 {input:"]", tag:"mo", output:"]", tex:null, ttype:RIGHTBRACKET, val:true},
+{input:"left(", tag:"mo", output:"(", tex:"(", notexcopy: true, ttype:LEFTBRACKET, val:true},
+{input:"right)", tag:"mo", output:")", tex:")", notexcopy: true, ttype:RIGHTBRACKET, val:true},
+{input:"left[", tag:"mo", output:"[", tex:"[", notexcopy: true, ttype:LEFTBRACKET, val:true},
+{input:"right]", tag:"mo", output:"]", tex:"]", notexcopy: true, ttype:RIGHTBRACKET, val:true},
 {input:"{", tag:"mo", output:"{", tex:"lbrace", ttype:LEFTBRACKET},
 {input:"}", tag:"mo", output:"}", tex:"rbrace", ttype:RIGHTBRACKET},
 {input:"|", tag:"mo", output:"|", tex:null, ttype:LEFTRIGHT, val:true},
+{input:"|:", tag:"mo", output:"|", tex:"|", ttype:LEFTBRACKET, notexcopy:true, val:true},
+{input:":|", tag:"mo", output:"|", tex:"|", ttype:RIGHTBRACKET, notexcopy:true, val:true},
+{input:":|:", tag:"mo", output:"|", tex:"|", ttype:CONST, notexcopy:true, val:true},
 //{input:"||", tag:"mo", output:"||", tex:null, ttype:LEFTRIGHT},
 {input:"(:", tag:"mo", output:"\u2329", tex:"langle", ttype:LEFTBRACKET},
 {input:":)", tag:"mo", output:"\u232A", tex:"rangle", ttype:RIGHTBRACKET},
@@ -200,6 +207,7 @@ var AMsymbols = [
 {input:"aleph", tag:"mo", output:"\u2135", tex:null, ttype:CONST},
 {input:"...",  tag:"mo", output:"...",    tex:"ldots", ttype:CONST},
 {input:":.",  tag:"mo", output:"\u2234",  tex:"therefore", ttype:CONST},
+{input:":'",  tag:"mo", output:"\u2235",  tex:"because", ttype:CONST},
 {input:"/_",  tag:"mo", output:"\u2220",  tex:"angle", ttype:CONST},
 {input:"/_\\",  tag:"mo", output:"\u25B3",  tex:"triangle", ttype:CONST},
 {input:"\\ ",  tag:"mo", output:"\u00A0", tex:null, ttype:CONST, val:true},
@@ -254,20 +262,20 @@ var AMsymbols = [
 {input:"norm",   tag:"mo", output:"norm",  tex:null, ttype:UNARY, notexcopy:true, rewriteleftright:["\\|","\\|"]},
 {input:"floor",   tag:"mo", output:"floor",  tex:null, ttype:UNARY, notexcopy:true, rewriteleftright:["\\lfloor","\\rfloor"]},
 {input:"ceil",   tag:"mo", output:"ceil",  tex:null, ttype:UNARY, notexcopy:true, rewriteleftright:["\\lceil","\\rceil"]},
-{input:"Sin",  tag:"mo", output:"sin", tex:null, ttype:UNARY, func:true},
-{input:"Cos",  tag:"mo", output:"cos", tex:null, ttype:UNARY, func:true},
-{input:"Tan",  tag:"mo", output:"tan", tex:null, ttype:UNARY, func:true},
-{input:"Arcsin",  tag:"mo", output:"arcsin", tex:null, ttype:UNARY, func:true},
-{input:"Arccos",  tag:"mo", output:"arccos", tex:null, ttype:UNARY, func:true},
-{input:"Arctan",  tag:"mo", output:"arctan", tex:null, ttype:UNARY, func:true},
-{input:"Sinh", tag:"mo", output:"sinh", tex:null, ttype:UNARY, func:true},
-{input:"Sosh", tag:"mo", output:"cosh", tex:null, ttype:UNARY, func:true},
-{input:"Tanh", tag:"mo", output:"tanh", tex:null, ttype:UNARY, func:true},
-{input:"Cot",  tag:"mo", output:"cot", tex:null, ttype:UNARY, func:true},
-{input:"Sec",  tag:"mo", output:"sec", tex:null, ttype:UNARY, func:true},
-{input:"Csc",  tag:"mo", output:"csc", tex:null, ttype:UNARY, func:true},
-{input:"Log",  tag:"mo", output:"log", tex:null, ttype:UNARY, func:true},
-{input:"Ln",   tag:"mo", output:"ln",  tex:null, ttype:UNARY, func:true},
+{input:"Sin",  tag:"mo", output:"Sin", tex:null, ttype:UNARY, func:true},
+{input:"Cos",  tag:"mo", output:"Cos", tex:null, ttype:UNARY, func:true},
+{input:"Tan",  tag:"mo", output:"Tan", tex:null, ttype:UNARY, func:true},
+{input:"Arcsin",  tag:"mo", output:"Arcsin", tex:null, ttype:UNARY, func:true},
+{input:"Arccos",  tag:"mo", output:"Arccos", tex:null, ttype:UNARY, func:true},
+{input:"Arctan",  tag:"mo", output:"Arctan", tex:null, ttype:UNARY, func:true},
+{input:"Sinh", tag:"mo", output:"Sinh", tex:null, ttype:UNARY, func:true},
+{input:"Cosh", tag:"mo", output:"Cosh", tex:null, ttype:UNARY, func:true},
+{input:"Tanh", tag:"mo", output:"Tanh", tex:null, ttype:UNARY, func:true},
+{input:"Cot",  tag:"mo", output:"Cot", tex:null, ttype:UNARY, func:true},
+{input:"Sec",  tag:"mo", output:"Sec", tex:null, ttype:UNARY, func:true},
+{input:"Csc",  tag:"mo", output:"Csc", tex:null, ttype:UNARY, func:true},
+{input:"Log",  tag:"mo", output:"Log", tex:null, ttype:UNARY, func:true},
+{input:"Ln",   tag:"mo", output:"Ln",  tex:null, ttype:UNARY, func:true},
 {input:"Abs",   tag:"mo", output:"abs",  tex:null, ttype:UNARY, notexcopy:true, rewriteleftright:["|","|"]},
 
 {input:"det",  tag:"mo", output:"det", tex:null, ttype:UNARY, func:true},
@@ -306,6 +314,8 @@ AMsqrt, AMroot, AMfrac, AMdiv, AMover, AMsub, AMsup,
 {input:"tilde", tag:"mover", output:"~", tex:null, ttype:UNARY, acc:true},
 {input:"dot", tag:"mover", output:".",      tex:null, ttype:UNARY, acc:true},
 {input:"ddot", tag:"mover", output:"..",    tex:null, ttype:UNARY, acc:true},
+{input:"overarc", tag:"mover", output:"\u23DC", tex:"stackrel{\\frown}", notexcopy: true, ttype:UNARY, acc:true},
+{input:"overparen", tag:"mover", output:"\u23DC", tex:"stackrel{\\frown}", notexcopy: true, ttype:UNARY, acc:true},
 {input:"ul", tag:"munder", output:"\u0332", tex:"underline", ttype:UNARY, acc:true},
 {input:"ubrace", tag:"munder", output:"\u23DF", tex:"underbrace", ttype:UNARY, acc:true},
 {input:"obrace", tag:"mover", output:"\u23DE", tex:"overbrace", ttype:UNARY, acc:true},
@@ -647,7 +657,7 @@ function AMTparseSexpr(str) { //parses str and returns [node,tailstr]
     var st = "";
     st = result[0].charAt(result[0].length -1);
 //alert(result[0].lastChild+"***"+st);
-    if (st == "|") { // its an absolute value subterm
+    if (st == "|" && str.charAt(0)!==",") { // its an absolute value subterm
 	    node = '{\\left|'+result[0]+'}';
       return [node,result[1]];
     } else { // the "|" is a \mid
@@ -699,7 +709,8 @@ function AMTparseIexpr(str) {
     }
     if (typeof sym1.func != 'undefined' && sym1.func) {
     	sym2 = AMgetSymbol(str);
-    	if (sym2.ttype != INFIX && sym2.ttype != RIGHTBRACKET) {
+    	if (sym2.ttype != INFIX && sym2.ttype != RIGHTBRACKET &&
+    	    (sym1.input.length>1 || sym2.ttype == LEFTBRACKET)) {
     		result = AMTparseIexpr(str);
     		node = '{'+node+result[0]+'}';
     		str = result[1];
@@ -745,7 +756,7 @@ function AMTparseExpr(str,rightbracket) {
 		if (right==')' || right==']') {
 			var left = newFrag.charAt(6);
 			if ((left=='(' && right==')' && symbol.output != '}') || (left=='[' && right==']')) {
-				var mxout = '\\matrix{';
+				var mxout = '';
 				var pos = new Array(); //position of commas
 				pos.push(0);
 				var matrix = true;
@@ -754,6 +765,7 @@ function AMTparseExpr(str,rightbracket) {
 				subpos[0] = [0];
 				var lastsubposstart = 0;
 				var mxanynestingd = 0;
+				var columnaligns = '';
 				for (i=1; i<len-1; i++) {
 					if (newFrag.charAt(i)==left) mxnestingd++;
 					if (newFrag.charAt(i)==right) {
@@ -806,6 +818,16 @@ function AMTparseExpr(str,rightbracket) {
 								subarr.push(newFrag.substring(subpos[pos[i]][subpos[pos[i]].length-1]+1,pos[i+1]-8));
 							}
 						}
+						for (j=subarr.length-1;j>=0;j--) {
+							if (subarr[j]=="{\\mid}") {
+								if (i==0) {
+									columnaligns = "|"+columnaligns;
+								}
+								subarr.splice(j,1);
+							} else if (i==0) {
+								columnaligns = "c"+columnaligns;
+							}
+						}
 						if (lastmxsubcnt>0 && subarr.length!=lastmxsubcnt) {
 							matrix = false;
 						} else if (lastmxsubcnt==-1) {
@@ -814,7 +836,7 @@ function AMTparseExpr(str,rightbracket) {
 						mxout += subarr.join('&');
 					}
 				}
-				mxout += '}';
+				mxout = "\\begin{array}{"+columnaligns+"} "+mxout+"\\end{array}";
 
 				if (matrix) { newFrag = mxout;}
 			}
@@ -860,6 +882,7 @@ function AMparseMath(str) {
 	  return document.createTextNode(" ");
   }
   var texstring = AMTparseAMtoTeX(str);
+
   if (typeof mathbg != "undefined" && mathbg=='dark') {
 	  texstring = "\\reverse " + texstring;
   }
@@ -871,7 +894,7 @@ function AMparseMath(str) {
   } else {
 	  texstring = "\\textstyle" + texstring;
   }
-  texstring = texstring.replace('$','\\$');
+  texstring = texstring.replace(/\$/g,'\\$');
 
   var node = document.createElement("img");
   if (typeof encodeURIComponent == "function") {

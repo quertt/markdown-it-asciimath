@@ -14,7 +14,7 @@ function setup(md, options) {
   if (typeof options === 'undefined') {
     options = defaults;
   }
-  
+
   var useKeyword = options.useKeyword;
   var defaultRender = md.renderer.rules.fence;
 
@@ -35,6 +35,9 @@ function setup(md, options) {
 
   md.renderer.rules.code_inline = function(tokens, idx, options, env, self) {
     var token = tokens[idx];
+
+    console.log(token.content.substr(0,4));
+    console.log(token.content.substr(4).trim());
 
     if(!useKeyword) {
       return renderInline(token.content.trim(), false);
@@ -89,13 +92,8 @@ function renderElement(str, disp) {
 }
 
 function preprocessMath(str) {
-  var newstr;
-
-  // correct index-texts
-  newstr = str.replace(/_(.*?)(\s|$|=|\(|\)|\*|\/|\^)/g, '_($1)$2');
-
   // parse to TeX
-  newstr = AMTparseAMtoTeX(newstr);
+  var newstr = AMTparseAMtoTeX(str);
 
   return newstr;
 }
