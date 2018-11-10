@@ -36,9 +36,6 @@ function setup(md, options) {
   md.renderer.rules.code_inline = function(tokens, idx, options, env, self) {
     var token = tokens[idx];
 
-    console.log(token.content.substr(0,4));
-    console.log(token.content.substr(4).trim());
-
     if(!useKeyword) {
       return renderInline(token.content.trim(), false);
     } else {
