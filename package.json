@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/quertt/markdown-it-asciimath#readme",
   "dependencies": {
-    "katex": "^0.7.1",
+    "katex": "^0.10.0",
     "lodash.assign": "^4.2.0"
   }
 }
