@@ -52,8 +52,9 @@ Options can be specified:
 md.use(require("markdown-it-asciimath"), options);
 ```
 
-Now only this option is available:
+Now only these options are available:
 
-Name              | Description                                                          | Default
-------------------|----------------------------------------------------------------------|------------------------------------
-"useKeyword"      | Use the keywords `math` and `latex` to specify inline math syntax  | false
+Name                    | Description                                                          | Default
+------------------------|----------------------------------------------------------------------|----------------------------------
+"useKeyword"            | Use the keywords `math` and `latex` to specify inline math syntax    | false
+"multilineExpressions"  | If set to `true`, block lines are rendered individually              | false
