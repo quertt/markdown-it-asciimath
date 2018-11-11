@@ -7,12 +7,19 @@ String.prototype.trim = function() {
 var katex = require('katex');
 var assign = require("lodash.assign");
 var defaults = {
-  useKeyword: false
+  useKeyword: false,
+  multilineExpressions: false
 }
+var options;
 
-function setup(md, options) {
-  if (typeof options === 'undefined') {
-    options = defaults;
+function setup(md, o) {
+  // use defaults if no options set
+  options = o;
+  if (typeof options.useKeyword === 'undefined') {
+    options.useKeyword = defaults.useKeyword;
+  }
+  if (typeof options.multilineExpressions === 'undefined') {
+    options.multilineExpressions = defaults.multilineExpressions;
   }
 
   var useKeyword = options.useKeyword;
@@ -55,11 +62,16 @@ function render(str, disp) {
   var arr = str.trim().split("\n");
   var result = "";
 
-  // render each line, skipping empty lines
-  for(var i = 0; i < arr.length; i++) {
-    if(arr[i]) {
-      result += "<p>" + renderElement(preprocessMath(arr[i]), disp) + "<p>";
+  if(!options.multilineExpressions) {
+    //render each line, skipping empty lines
+    for(var i = 0; i < arr.length; i++) {
+      if(arr[i]) {
+        result += "<p>" + renderElement(preprocessMath(arr[i]), disp) + "<p>";
+      }
     }
+  } else {
+    // render whole block
+    result += "<p>" + renderElement(preprocessMath(str), disp) + "<p>";
   }
 
   return result;
