@@ -32,7 +32,7 @@ markdown-it-asciimath converts ASCII-math to TeX and then uses KaTeX to render t
 The plugin uses KaTeX to render TeX-math so the KaTeX stylesheet needs to be included:
 
 ```html
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 ```
 
 To use the plugin:
